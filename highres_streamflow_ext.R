@@ -31,9 +31,10 @@ highres_streamflow_ext <- function(dsn_ncs, dsn_shp, dname = "dis", start_year =
     r <- raster(t(dis_array), xmn=min(lon), xmx=max(lon),
                 ymn=min(lat), ymx=max(lat),
                 crs=CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+ towgs84=0,0,0"))
-    rasValue <- extract(r, shapefiles)
+    rasValue <- raster::extract(r, shapefiles)
+    nc_close(nc_file)
     WaterGap_mat[i,] <- rasValue
-    cat(filename[i])
+    cat("the extraction of the streamflow for the gauging stations in",filename[i], "file was done.")
   }
   colnames(WaterGap_mat) <- shapefiles$dd_id
   return(WaterGap_mat)
