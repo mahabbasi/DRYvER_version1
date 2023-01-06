@@ -12,7 +12,7 @@
 highres_streamflow_ext <- function(dsn_ncs, dsn_shp, dname = "dis", start_year = 1980, end_year = 2019){
   years <- seq(start_year, end_year)
   filename <- vector("character")
-  for (i in 1:lenght(years)) {
+  for (i in 1:length(years)) {
     for (j in 1:12) {
       filename[(i-1)*12 + j] <- paste0("15sec_dis_", j, "_", years[i], ".nc4")
     }
