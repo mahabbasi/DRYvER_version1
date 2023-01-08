@@ -156,7 +156,6 @@ calc_highres_pred <- function(waterGap_streamflow, stations_dd_id){
       mutate(date = seq.Date(as.Date("1980-01-01"),
                              as.Date("2019-12-01"), "month"),
              .before = "cv")
-    
     list_min_p3m[[stations_dd_id[i]]] <- WaterGap_past_3_month_min
     list_mean_p3m[[stations_dd_id[i]]] <- WaterGap_past_3_month_mean
     list_min_p12m[[stations_dd_id[i]]] <- WaterGap_past_12_month_min
