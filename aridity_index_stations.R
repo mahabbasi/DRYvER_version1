@@ -25,8 +25,8 @@ ai_static_extract <- function(rast_path, shp_dsn, num_year = 39){
     x %>% rep(., num_year) %>% as.vector()
   }) %>% `colnames<-`(station_name)
   ai_vec <- ai_df  %>% as.vector()
-  out <- list(ai_df,
-              ai_vec)
+  out <- list(ai_df = ai_df,
+              ai_vec = ai_vec)
   return(out)
 }
 
@@ -35,6 +35,7 @@ ai_static_extract <- function(rast_path, shp_dsn, num_year = 39){
 library(raster)
 library(sf)
 library(tidyverse)
+
 # global aridity index for all the stations.
 shp_dsn <- file.path("/home/home1/hydro/abbasi/DRYvER_modeling_version2",
                      "Stations_shp/modified_gauge_stations_final/stations_eu_norussia.shp")
