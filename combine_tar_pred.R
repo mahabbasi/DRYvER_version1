@@ -3,10 +3,11 @@
 #' 
 #' @param target_path (char) the path of traget `.RData`.
 #' @param pre_path (char) the path of predictors `.RData`.
-#' 
+#'  @param shp_path (char) the path of the gauging stations shapefile.
+#'  
 #' @export
 #' 
-combine_tar_pred <- function(target_path, pre_path){
+combine_tar_pred <- function(target_path, pre_path, shp_path){
   
   # loading the target and predictors 
   list.files(path = target_path,
@@ -14,8 +15,27 @@ combine_tar_pred <- function(target_path, pre_path){
              full.names = TRUE) %>%
     lapply(., load, .GlobalEnv)
   
-  pre_dsn <- paste0(pre_path,"/", "all_preds.RData")
-  load(pre_path)
+  paste0(pre_path,"/", "all_preds.RData") %>% 
+    lapply(., load, .GlobalEnv)
+  
+  
+  # importing the stations and extract the latituds and longituds
+  stations_sf <- sf::st_read(shp_path) 
+  
+  coord_stations_lon <- stations_sf %>%
+    st_coordinates() %>% .[,"X"]
+  coord_stations_lat <- stations_sf %>%
+    st_coordinates() %>% .[,"Y"]
+  coord_stations_lon_ts <- lapply(seq_along(coord_stations_lon),
+                                  function(x) rep(coord_stations_lon[x], 468)) %>% 
+    do.call("rbind", .) %>% t(.) %>%  as.vector()
+  
+  coord_stations_lat_ts <- lapply(seq_along(coord_stations_lat),
+                                  function(x) rep(coord_stations_lat[x], 468)) %>% 
+    do.call("rbind", .) %>% t(.) %>%  as.vector()
+  
+  all_preds <- data.frame(all_preds, X = coord_stations_lon_ts, 
+                          Y = coord_stations_lat_ts)
   
   #  merging the smires and grdc datasets and extract the stations uuid
   target_stations <- cbind(no_flow_smires_1981to2019, 
